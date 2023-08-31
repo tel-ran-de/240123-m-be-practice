@@ -51,7 +51,7 @@ public class FileProcessor {
                 if (line == null) {
                     break;
                 }
-//                executor.execute(()-> processor.process(line));
+//                executor.execute(()->  processor.process(line));
                 Future<?> task = executor.submit(() -> processor.process(line));
                 futures.add(task);
             }

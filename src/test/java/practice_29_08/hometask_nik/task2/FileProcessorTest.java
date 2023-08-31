@@ -74,5 +74,4 @@ class FileProcessorTest {
         verify(processor, times(0)).process(anyString());
         fileProcessor.closeExecutor();
     }
-
 }

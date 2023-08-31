@@ -1,4 +1,4 @@
-package practice_24_08.tasks_with_comments.task1;
+package practice_24_08.tasks_nik.task1;
 
 public class MyThread extends Thread {
     //исспользуем переменную класса для управления выходом из цикла
@@ -12,7 +12,7 @@ public class MyThread extends Thread {
 
     @Override
     public void run() {
-        //в цикле каждую секунду выводим сообщение пока поток извне не поменяет значение переменной на true
+        // в цикле каждую секунду выводим сообщение пока поток извне не поменяет значение переменной на true
         while (!isStopped) {
             System.out.println("some text");
             try {

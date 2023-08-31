@@ -34,7 +34,7 @@ public class Tasks {
             }
 
             interface Processor {
-                void process(String line);
+                 void process(String line);
             }
 
             При этом реализация интерфейса Processor предполагает, что каждая строка может обрабатываться долго.

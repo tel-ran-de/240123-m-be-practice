@@ -1,4 +1,4 @@
-package practice_24_08.tasks_with_comments.task2;
+package practice_24_08.tasks_nik.task2;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -7,16 +7,13 @@ class MyCounter2 {
     private volatile AtomicReference<State> twoCounters = new AtomicReference<>(new State());
 
     public void increment() {
-        twoCounters.getAndUpdate((state)-> {
-            state.setCounter(state.getCounter() + 1);
-            state.setOperationCounter(state.getOperationCounter() + 1);
-            return state;
+
+        twoCounters.getAndUpdate((state) -> {
+            State state1 = new State();
+            state1.setCounter(state.getCounter() + 1);
+            state1.setOperationCounter(state.getOperationCounter() + 1);
+            return state1;
         });
-//        twoCounters.getAndUpdate((state)-> {
-//            State state1 = new State();
-//            state1.setCounter(state.getCounter() + 1);
-//            state1.setOperationCounter(state.getOperationCounter() + 1);
-//            return state1;
     }
 
     public void decrement() {
