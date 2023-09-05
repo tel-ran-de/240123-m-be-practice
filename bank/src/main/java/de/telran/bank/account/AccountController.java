@@ -13,11 +13,11 @@ import java.util.UUID;
 @RestController
 public class AccountController {
 
-    private Logger log = LoggerFactory.getLogger(AccountController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
 
     @PostMapping(value = "/account", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void createAccount(@RequestBody Account account) {
-        log.info("Received account = {}", account);
+        LOG.info("Received account = {}", account);
     }
 
     @GetMapping("/account")
