@@ -41,7 +41,7 @@ public class AccountCreationTest {
 
         // then
         Assertions.assertEquals(200, createResult.getResponse().getStatus());
-        Assertions.assertEquals(readJson(receiveResult, Account.class), account);
+        Assertions.assertEquals(account, readJson(receiveResult, Account.class));
     }
 
     private String writeJson(Account account) throws JsonProcessingException {
