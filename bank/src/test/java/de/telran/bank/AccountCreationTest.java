@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,7 +29,7 @@ public class AccountCreationTest {
     @Test
     void testAccountCreated() throws Exception {
         // given
-        Account account = new Account("Anton", "Ermak");
+        Account account = new Account(new UUID(5, 5), "Anton", "Ermak");
 
         // when
         MvcResult createResult = mvc.perform(MockMvcRequestBuilders.post("/account")

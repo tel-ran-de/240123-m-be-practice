@@ -4,8 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Account {
+
+    @JsonProperty
+    private final UUID uuid;
 
     @JsonProperty
     private final String firstName;
@@ -14,9 +18,14 @@ public class Account {
     private final String lastName;
 
     @JsonCreator
-    public Account(String firstName, String lastName) {
+    public Account(UUID uuid, String firstName, String lastName) {
+        this.uuid = uuid;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public String getFirstName() {
@@ -32,18 +41,19 @@ public class Account {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        return Objects.equals(firstName, account.firstName) && Objects.equals(lastName, account.lastName);
+        return Objects.equals(uuid, account.uuid) && Objects.equals(firstName, account.firstName) && Objects.equals(lastName, account.lastName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName);
+        return Objects.hash(uuid, firstName, lastName);
     }
 
     @Override
     public String toString() {
         return "Account{" +
-                "firstName='" + firstName + '\'' +
+                "uuid=" + uuid +
+                ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';
     }
