@@ -28,9 +28,6 @@ public class Tasks {
             public class FileProcessor {
 
                 void process(File file, Processor processor) {};
-
-                // ожидает выполнения всех задач, которые были созданы в #process(File, Processor);
-                void awaitAllTasks() throws InterruptedException;
             }
 
             interface Processor {
