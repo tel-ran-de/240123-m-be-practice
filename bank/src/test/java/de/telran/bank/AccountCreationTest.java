@@ -37,11 +37,12 @@ public class AccountCreationTest {
                         .content(writeJson(account)))
                 .andReturn();
 
-        MvcResult receiveResult = mvc.perform(MockMvcRequestBuilders.get("/account")).andReturn();
+        MvcResult receiveResult = mvc.perform(MockMvcRequestBuilders.get("/account/{id}",
+                account.getUuid())).andReturn();
 
         // then
         Assertions.assertEquals(200, createResult.getResponse().getStatus());
-        Assertions.assertEquals(account, readJson(receiveResult, Account.class));
+        Assertions.assertEquals(readJson(receiveResult, Account.class), account);
     }
 
     private String writeJson(Account account) throws JsonProcessingException {
