@@ -27,7 +27,7 @@ public class AccountCreationTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void testAccountCreated() throws Exception {
+    void shouldCreatedAccount() throws Exception {
         // given
         Account account = new Account(new UUID(5, 5), "Anton", "Ermak");
 
@@ -42,6 +42,22 @@ public class AccountCreationTest {
         // then
         Assertions.assertEquals(200, createResult.getResponse().getStatus());
         Assertions.assertEquals(account, readJson(receiveResult, Account.class));
+    }
+    @Test
+    void shouldNotOwerwriteAccount() throws Exception {
+        Account account = new Account(new UUID(5, 5), "Anton", "Ermak");
+        Account account2 = new Account(new UUID(5, 5), "Ivan", "Ivanov");
+        MvcResult createResult = mvc.perform(MockMvcRequestBuilders.post("/account")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(writeJson(account)))
+                .andReturn();
+        MvcResult createResult2 = mvc.perform(MockMvcRequestBuilders.post("/account")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(writeJson(account2)))
+                .andReturn();
+        // then
+        Assertions.assertEquals(200, createResult.getResponse().getStatus());
+        Assertions.assertEquals(400, createResult2.getResponse().getStatus());
     }
 
     private String writeJson(Account account) throws JsonProcessingException {
