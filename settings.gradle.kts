@@ -10,3 +10,5 @@ plugins {
 }
 
 rootProject.name = "practice-240123-m-be"
+
+include("bank")
