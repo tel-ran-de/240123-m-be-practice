@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Account {
+public class AccountJson {
 
     @JsonProperty
     private final UUID uuid;
@@ -18,7 +18,7 @@ public class Account {
     private final String lastName;
 
     @JsonCreator
-    public Account(UUID uuid, String firstName, String lastName) {
+    public AccountJson(UUID uuid, String firstName, String lastName) {
         this.uuid = uuid;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -40,8 +40,8 @@ public class Account {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Account account = (Account) o;
-        return Objects.equals(uuid, account.uuid) && Objects.equals(firstName, account.firstName) && Objects.equals(lastName, account.lastName);
+        AccountJson accountJson = (AccountJson) o;
+        return Objects.equals(uuid, accountJson.uuid) && Objects.equals(firstName, accountJson.firstName) && Objects.equals(lastName, accountJson.lastName);
     }
 
     @Override

@@ -9,26 +9,26 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class AccountStorage {
 
-    private final Map<UUID, Account> accounts = new ConcurrentHashMap<>();
+    private final Map<UUID, AccountJson> accounts = new ConcurrentHashMap<>();
 
-    public void save(Account account) throws DuplicatedAccountException {
-        Account savedEntity = accounts.compute(account.getUuid(), (key, prev) -> {
-            if (prev == null || prev.equals(account)) {
-                return account;
+    public void save(AccountJson accountJson) throws DuplicatedAccountException {
+        AccountJson savedEntity = accounts.compute(accountJson.getUuid(), (key, prev) -> {
+            if (prev == null || prev.equals(accountJson)) {
+                return accountJson;
             } else {
                 return prev;
             }
         });
-        if (account != savedEntity) {
+        if (accountJson != savedEntity) {
             throw new DuplicatedAccountException();
         }
     }
 
-    public Account get(UUID id) {
+    public AccountJson get(UUID id) {
         return accounts.get(id);
     }
 
-    public void update(Account account) {
-        accounts.put(account.getUuid(), account);
+    public void update(AccountJson accountJson) {
+        accounts.put(accountJson.getUuid(), accountJson);
     }
 }

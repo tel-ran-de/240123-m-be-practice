@@ -2,7 +2,7 @@ package de.telran.bank;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.telran.bank.account.Account;
+import de.telran.bank.account.AccountJson;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,27 +35,27 @@ public class AccountCreationTest {
     @Test
     void shouldCreateAccount() throws Exception {
         // given
-        Account account = new Account(new UUID(5, 5), "Anton", "Ermak");
+        AccountJson accountJson = new AccountJson(new UUID(5, 5), "Anton", "Ermak");
 
         // when
-        MvcResult createResult = createAccount(account);
-        MvcResult receiveResult = getAccount(account.getUuid());
+        MvcResult createResult = createAccount(accountJson);
+        MvcResult receiveResult = getAccount(accountJson.getUuid());
 
         // then
         Assertions.assertEquals(200, createResult.getResponse().getStatus());
-        Assertions.assertEquals(readJson(receiveResult, Account.class), account);
+        Assertions.assertEquals(readJson(receiveResult, AccountJson.class), accountJson);
     }
 
     @Test
     void shouldNotOverwriteAccount() throws Exception {
         // given
         UUID uuid = new UUID(5, 5);
-        Account account = new Account(uuid, "Anton", "Ermak");
-        Account account2 = new Account(uuid, "Ivan", "Ivanov");
+        AccountJson accountJson = new AccountJson(uuid, "Anton", "Ermak");
+        AccountJson accountJson2 = new AccountJson(uuid, "Ivan", "Ivanov");
 
         // when
-        MvcResult firstResult = createAccount(account);
-        MvcResult secondResult = createAccount(account2);
+        MvcResult firstResult = createAccount(accountJson);
+        MvcResult secondResult = createAccount(accountJson2);
 
         // then
         Assertions.assertEquals(200, firstResult.getResponse().getStatus());
@@ -66,25 +66,25 @@ public class AccountCreationTest {
     void shouldUpdateAccountWithSecretKey() throws Exception {
         // given
         UUID uuid = new UUID(5, 5);
-        Account account = new Account(uuid, "Anton", "Ermak");
-        Account account2 = new Account(account.getUuid(), "Anton", "Ivanov");
+        AccountJson accountJson = new AccountJson(uuid, "Anton", "Ermak");
+        AccountJson accountJson2 = new AccountJson(accountJson.getUuid(), "Anton", "Ivanov");
 
         // when
-        MvcResult createResult = createAccount(account);
-        MvcResult updateResult = updateAccount(account2);
-        MvcResult receiveResult = getAccount(account.getUuid());
+        MvcResult createResult = createAccount(accountJson);
+        MvcResult updateResult = updateAccount(accountJson2);
+        MvcResult receiveResult = getAccount(accountJson.getUuid());
 
 
         // then
         Assertions.assertEquals(200, createResult.getResponse().getStatus());
         Assertions.assertEquals(200, updateResult.getResponse().getStatus());
-        Assertions.assertEquals(readJson(receiveResult, Account.class), account2);
+        Assertions.assertEquals(readJson(receiveResult, AccountJson.class), accountJson2);
     }
 
-    private MvcResult createAccount(Account account) throws Exception {
+    private MvcResult createAccount(AccountJson accountJson) throws Exception {
         return mvc.perform(MockMvcRequestBuilders.post("/account")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(writeJson(account)))
+                        .content(writeJson(accountJson)))
                 .andReturn();
     }
 
@@ -92,16 +92,16 @@ public class AccountCreationTest {
         return mvc.perform(MockMvcRequestBuilders.get("/account/{id}", id)).andReturn();
     }
 
-    private MvcResult updateAccount(Account account) throws Exception {
+    private MvcResult updateAccount(AccountJson accountJson) throws Exception {
         return mvc.perform(MockMvcRequestBuilders.put("/account")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Secret-Key", secretKey)
-                        .content(writeJson(account)))
+                        .content(writeJson(accountJson)))
                 .andReturn();
     }
 
-    private String writeJson(Account account) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(account);
+    private String writeJson(AccountJson accountJson) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(accountJson);
     }
 
     private <T> T readJson(MvcResult mvcResult, Class<T> cls) throws IOException {
