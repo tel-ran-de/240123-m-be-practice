@@ -1,34 +1,32 @@
 package de.telran.bank.account;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class AccountStorage {
 
-    private final Map<UUID, AccountJson> accounts = new ConcurrentHashMap<>();
+    @Autowired
+    private AccountRepository accountRepository;
 
-    public void save(AccountJson accountJson) throws DuplicatedAccountException {
-        AccountJson savedEntity = accounts.compute(accountJson.getUuid(), (key, prev) -> {
-            if (prev == null || prev.equals(accountJson)) {
-                return accountJson;
-            } else {
-                return prev;
-            }
-        });
-        if (accountJson != savedEntity) {
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public void save(AccountEntity accountEntity) throws DuplicatedAccountException {
+        AccountEntity prev = get(accountEntity.getId());
+        if (prev != null) {
             throw new DuplicatedAccountException();
         }
+        accountRepository.save(accountEntity);
     }
 
-    public AccountJson get(UUID id) {
-        return accounts.get(id);
+    public AccountEntity get(UUID id) {
+        return accountRepository.findById(id).orElse(null);
     }
 
-    public void update(AccountJson accountJson) {
-        accounts.put(accountJson.getUuid(), accountJson);
+    public void update(AccountEntity accountEntity) {
+        accountRepository.save(accountEntity);
     }
 }

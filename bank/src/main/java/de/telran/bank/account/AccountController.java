@@ -24,7 +24,7 @@ public class AccountController {
     @PostMapping(value = "/account", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void createAccount(@RequestBody AccountJson accountJson) throws DuplicatedAccountException {
         LOG.info("Received account = {}", accountJson);
-        storage.save(accountJson);
+        storage.save(new AccountEntity(accountJson.getUuid(), accountJson.getFirstName(), accountJson.getLastName()));
     }
 
     @PutMapping(value = "/account", consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -35,12 +35,16 @@ public class AccountController {
             throw new SecurityCheckException();
         }
 
-        storage.update(accountJson);
+        storage.update(new AccountEntity(accountJson.getUuid(), accountJson.getFirstName(), accountJson.getLastName()));
     }
 
 
     @GetMapping("/account/{id}")
     public AccountJson getAccount(@PathVariable UUID id) {
-        return storage.get(id);
+        AccountEntity accountEntity = storage.get(id);
+        if (accountEntity == null) {
+            return null;
+        }
+        return new AccountJson(accountEntity.getId(), accountEntity.getFirstName(), accountEntity.getLastName());
     }
 }
