@@ -10,7 +10,6 @@ import java.util.UUID;
 public class AccountEntity {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column
