@@ -22,25 +22,29 @@ public class AccountController {
     private static final Logger LOG = LoggerFactory.getLogger(AccountController.class);
 
     @PostMapping(value = "/account", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public void createAccount(@RequestBody Account account) throws DuplicatedAccountException {
-        LOG.info("Received account = {}", account);
-        storage.save(account);
+    public void createAccount(@RequestBody AccountJson accountJson) throws DuplicatedAccountException {
+        LOG.info("Received account = {}", accountJson);
+        storage.save(new AccountEntity(accountJson.getUuid(), accountJson.getFirstName(), accountJson.getLastName()));
     }
 
     @PutMapping(value = "/account", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public void updateAccount(@RequestBody Account account, HttpServletRequest request) throws SecurityCheckException {
-        LOG.info("Received account = {}", account);
+    public void updateAccount(@RequestBody AccountJson accountJson, HttpServletRequest request) throws SecurityCheckException {
+        LOG.info("Received account = {}", accountJson);
         String secretKey = request.getHeader("X-Secret-Key");
         if (!this.secretKey.equals(secretKey)) {
             throw new SecurityCheckException();
         }
 
-        storage.update(account);
+        storage.update(new AccountEntity(accountJson.getUuid(), accountJson.getFirstName(), accountJson.getLastName()));
     }
 
 
     @GetMapping("/account/{id}")
-    public Account getAccount(@PathVariable UUID id) {
-        return storage.get(id);
+    public AccountJson getAccount(@PathVariable UUID id) {
+        AccountEntity accountEntity = storage.get(id);
+        if (accountEntity == null) {
+            return null;
+        }
+        return new AccountJson(accountEntity.getId(), accountEntity.getFirstName(), accountEntity.getLastName());
     }
 }
