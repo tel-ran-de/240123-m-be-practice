@@ -3,6 +3,7 @@ package de.telran.bank;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.telran.bank.account.AccountJson;
+import de.telran.bank.web.BadRequestBodyJson;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,7 +21,8 @@ import java.util.UUID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Sql("/schema-cleanup.sql")
+@Sql("/schema.sql")
 public class AccountCreationTest {
 
     @Autowired
@@ -44,6 +46,23 @@ public class AccountCreationTest {
         // then
         Assertions.assertEquals(200, createResult.getResponse().getStatus());
         Assertions.assertEquals(readJson(receiveResult, AccountJson.class), accountJson);
+    }
+
+    @Test
+    void shouldDiscardInvalidAccount() throws Exception {
+        // given
+        AccountJson accountJson = new AccountJson(null, "", "");
+
+        // when
+        MvcResult createResult = createAccount(accountJson);
+        BadRequestBodyJson badRequestBodyJson = objectMapper.readValue(createResult.getResponse().getContentAsString(),
+                BadRequestBodyJson.class);
+
+        // then
+        Assertions.assertEquals(400, createResult.getResponse().getStatus());
+        Assertions.assertEquals("must not be null", badRequestBodyJson.getErrors().get("uuid"));
+        Assertions.assertEquals("must not be blank", badRequestBodyJson.getErrors().get("firstName"));
+        Assertions.assertEquals("must not be blank", badRequestBodyJson.getErrors().get("lastName"));
     }
 
     @Test

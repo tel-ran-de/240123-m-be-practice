@@ -2,18 +2,15 @@ package de.telran.bank.account;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Component
-public class AccountStorage {
+public class AccountManagementService {
 
     @Autowired
     private AccountRepository accountRepository;
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void save(AccountEntity accountEntity) throws DuplicatedAccountException {
         AccountEntity prev = get(accountEntity.getId());
         if (prev != null) {

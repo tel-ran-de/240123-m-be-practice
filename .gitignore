@@ -40,3 +40,5 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/bank/test-data.db
+/data.db
