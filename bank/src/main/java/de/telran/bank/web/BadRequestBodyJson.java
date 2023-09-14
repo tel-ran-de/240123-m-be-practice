@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
 
-public class BadRequestBody {
+public class BadRequestBodyJson {
 
     @JsonProperty
     private final Map<String, String> errors;
 
     @JsonCreator
-    public BadRequestBody(Map<String, String> errors) {
+    public BadRequestBodyJson(Map<String, String> errors) {
         this.errors = errors;
     }
 

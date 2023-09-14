@@ -16,7 +16,7 @@ import java.util.Map;
 public class ExceptionInvalidHandler {
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<BadRequestBody> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<BadRequestBodyJson> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
@@ -24,6 +24,6 @@ public class ExceptionInvalidHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        return ResponseEntity.status(400).body(new BadRequestBody(errors));
+        return ResponseEntity.status(400).body(new BadRequestBodyJson(errors));
     }
 }

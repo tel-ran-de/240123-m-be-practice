@@ -3,7 +3,7 @@ package de.telran.bank;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.telran.bank.account.AccountJson;
-import de.telran.bank.web.BadRequestBody;
+import de.telran.bank.web.BadRequestBodyJson;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,14 +55,14 @@ public class AccountCreationTest {
 
         // when
         MvcResult createResult = createAccount(accountJson);
-        BadRequestBody badRequestBody = objectMapper.readValue(createResult.getResponse().getContentAsString(),
-                BadRequestBody.class);
+        BadRequestBodyJson badRequestBodyJson = objectMapper.readValue(createResult.getResponse().getContentAsString(),
+                BadRequestBodyJson.class);
 
         // then
         Assertions.assertEquals(400, createResult.getResponse().getStatus());
-        Assertions.assertEquals("must not be null", badRequestBody.getErrors().get("uuid"));
-        Assertions.assertEquals("must not be blank", badRequestBody.getErrors().get("firstName"));
-        Assertions.assertEquals("must not be blank", badRequestBody.getErrors().get("lastName"));
+        Assertions.assertEquals("must not be null", badRequestBodyJson.getErrors().get("uuid"));
+        Assertions.assertEquals("must not be blank", badRequestBodyJson.getErrors().get("firstName"));
+        Assertions.assertEquals("must not be blank", badRequestBodyJson.getErrors().get("lastName"));
     }
 
     @Test
