@@ -1,6 +1,7 @@
 package de.telran.bank.account;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class AccountController {
     private String secretKey;
 
     @PostMapping(value = "/account", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public void createAccount(@RequestBody AccountJson accountJson) throws DuplicatedAccountException {
+    public void createAccount(@Valid @RequestBody AccountJson accountJson) throws DuplicatedAccountException {
         LOG.info("Received account = {}", accountJson);
         accountManagementService.save(new AccountEntity(accountJson.getUuid(),
                 accountJson.getFirstName(),
@@ -30,7 +31,7 @@ public class AccountController {
     }
 
     @PutMapping(value = "/account", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public void updateAccount(@RequestBody AccountJson accountJson, HttpServletRequest request) throws SecurityCheckException {
+    public void updateAccount(@Valid @RequestBody AccountJson accountJson, HttpServletRequest request) throws SecurityCheckException {
         LOG.info("Received account = {}", accountJson);
         String secretKey = request.getHeader("X-Secret-Key");
         if (!this.secretKey.equals(secretKey)) {

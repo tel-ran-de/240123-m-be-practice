@@ -3,6 +3,7 @@ package de.telran.bank;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.telran.bank.account.AccountJson;
+import de.telran.bank.web.BadRequestBody;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,24 @@ public class AccountCreationTest {
         // then
         Assertions.assertEquals(200, createResult.getResponse().getStatus());
         Assertions.assertEquals(readJson(receiveResult, AccountJson.class), accountJson);
+    }
+
+    @Test
+    void shouldDiscardInvalidAccount() throws Exception {
+        // given
+        AccountJson accountJson = new AccountJson(new UUID(5, 5), "", "");
+
+        // when
+        MvcResult createResult = createAccount(accountJson);
+
+        BadRequestBody badRequestBody = objectMapper.readValue(createResult.getResponse().getContentAsString(),
+                BadRequestBody.class);
+
+        // then
+        Assertions.assertEquals(400, createResult.getResponse().getStatus());
+        Assertions.assertEquals("must not be blank", badRequestBody.getErrors().get("firstName"));
+        Assertions.assertEquals("must not be blank", badRequestBody.getErrors().get("lastName"));
+
     }
 
     @Test
