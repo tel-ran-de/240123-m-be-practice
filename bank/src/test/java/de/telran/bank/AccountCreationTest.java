@@ -51,19 +51,18 @@ public class AccountCreationTest {
     @Test
     void shouldDiscardInvalidAccount() throws Exception {
         // given
-        AccountJson accountJson = new AccountJson(new UUID(5, 5), "", "");
+        AccountJson accountJson = new AccountJson(null, "", "");
 
         // when
         MvcResult createResult = createAccount(accountJson);
-
         BadRequestBody badRequestBody = objectMapper.readValue(createResult.getResponse().getContentAsString(),
                 BadRequestBody.class);
 
         // then
         Assertions.assertEquals(400, createResult.getResponse().getStatus());
+        Assertions.assertEquals("must not be null", badRequestBody.getErrors().get("uuid"));
         Assertions.assertEquals("must not be blank", badRequestBody.getErrors().get("firstName"));
         Assertions.assertEquals("must not be blank", badRequestBody.getErrors().get("lastName"));
-
     }
 
     @Test
