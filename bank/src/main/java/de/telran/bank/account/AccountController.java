@@ -23,7 +23,7 @@ public class AccountController {
     private String secretKey;
 
     @PostMapping(value = "/account", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public void createAccount(@Valid @RequestBody AccountJson accountJson) throws DuplicatedAccountException {
+    public void createAccount(@Valid @RequestBody AccountJson accountJson) throws DuplicatedEntityException {
         LOG.info("Received account = {}", accountJson);
         accountManagementService.save(new AccountEntity(accountJson.getUuid(),
                 accountJson.getFirstName(),

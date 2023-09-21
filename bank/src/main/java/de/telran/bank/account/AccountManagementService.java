@@ -11,10 +11,10 @@ public class AccountManagementService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public void save(AccountEntity accountEntity) throws DuplicatedAccountException {
+    public void save(AccountEntity accountEntity) throws DuplicatedEntityException {
         AccountEntity prev = get(accountEntity.getId());
         if (prev != null) {
-            throw new DuplicatedAccountException();
+            throw new DuplicatedEntityException();
         }
         accountRepository.save(accountEntity);
     }
