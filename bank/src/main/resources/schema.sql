@@ -13,3 +13,4 @@ create table if not exists wallet_entity
     balance       text not null,
     FOREIGN KEY (account_id) references account_entity (id)
 );
+create index if not exists wallet_entity_account_id_idx on wallet_entity(account_id);

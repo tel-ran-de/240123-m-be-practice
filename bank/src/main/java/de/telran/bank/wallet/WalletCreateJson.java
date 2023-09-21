@@ -3,6 +3,7 @@ package de.telran.bank.wallet;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Currency;
 
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ public class WalletCreateJson {
 
     @JsonProperty
     @NotNull
+    @WalletCurrency
     private final String currency;
 
     public WalletCreateJson(UUID uuid, String currency) {
