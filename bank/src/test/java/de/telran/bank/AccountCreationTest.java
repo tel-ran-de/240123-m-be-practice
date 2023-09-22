@@ -19,21 +19,20 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.io.IOException;
 import java.util.UUID;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Sql("/schema-cleanup.sql")
-@Sql("/schema.sql")
-public class AccountCreationTest {
+
+public class AccountCreationTest extends BaseTest{
 
     @Autowired
     private MockMvc mvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Value("${secretKey}")
     private String secretKey;
 
+    /*
+    1. Добавление новых тестов в проект (Wallet).
+    2. Добавление новых валидаторов в контроллеры, тесты.
+    3. Postman.
+ */
     @Test
     void shouldCreateAccount() throws Exception {
         // given
@@ -117,13 +116,5 @@ public class AccountCreationTest {
                         .header("X-Secret-Key", secretKey)
                         .content(writeJson(accountJson)))
                 .andReturn();
-    }
-
-    private String writeJson(AccountJson accountJson) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(accountJson);
-    }
-
-    private <T> T readJson(MvcResult mvcResult, Class<T> cls) throws IOException {
-        return objectMapper.readValue(mvcResult.getResponse().getContentAsByteArray(), cls);
     }
 }
