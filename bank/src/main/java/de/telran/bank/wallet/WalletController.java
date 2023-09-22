@@ -29,13 +29,16 @@ public class WalletController {
                 accountId, BigDecimal.ZERO));
     }
 
-
     @GetMapping("/account/{accountId}/wallets")
     public WalletsJson getWallets(@PathVariable UUID accountId) {
         List<WalletEntity> wallets = walletManagementService.getWallets(accountId);
 
-        return new WalletsJson(wallets.stream().map(walletEntity -> new WalletJson(
-                walletEntity.getId(), walletEntity.getCurrencyCode(), walletEntity.getAccountId(),
-                walletEntity.getBalance())).collect(Collectors.toList()));
+        return new WalletsJson(wallets
+                .stream()
+                .map(walletEntity -> new WalletJson(walletEntity.getId(),
+                        walletEntity.getCurrencyCode(),
+                        walletEntity.getAccountId(),
+                        walletEntity.getBalance()))
+                .collect(Collectors.toList()));
     }
 }
